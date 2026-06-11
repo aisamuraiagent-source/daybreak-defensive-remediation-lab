@@ -28,4 +28,6 @@ Usar `textContent` para renderizar texto puro.
 
 ## Status
 
-Aguardando aplicacao do patch e verificacao final.
+Remediacao concluida.
+
+O patch substituiu a renderizacao insegura por renderizacao de texto puro. A verificacao prevista confirma que marcacoes HTML digitadas pelo usuario devem aparecer como texto literal, sem interpretacao pelo navegador.

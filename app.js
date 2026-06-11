@@ -1,6 +1,5 @@
-﻿// VERSAO INICIAL INTENCIONALMENTE INSEGURA PARA LAB LOCAL DEFENSIVO.
-// Risco: renderizacao direta de entrada do usuario com innerHTML.
-// Objetivo: permitir triagem defensiva e patch posterior em codigo proprio.
+// Versao remediada para lab local defensivo.
+// Entrada do usuario e renderizada como texto puro.
 
 const input = document.getElementById("noteInput");
 const button = document.getElementById("renderButton");
@@ -14,5 +13,5 @@ button.addEventListener("click", () => {
     return;
   }
 
-  output.innerHTML = value;
+  output.textContent = value;
 });
