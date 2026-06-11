@@ -43,6 +43,15 @@ Demonstrar um fluxo defensivo completo em ambiente autorizado e controlado:
 - JavaScript
 - OpenAI Codex CLI
 
+## Resultado
+
+- Padrao inseguro identificado: renderizacao com innerHTML.
+- Patch aplicado: substituicao por 	extContent.
+- Validacao local realizada.
+- Evidencia publica sanitizada criada.
+- Commit final revisado e aprovado por humano.
+
 ## Status
 
-Laboratorio inicial criado para demonstrar remediacao defensiva controlada.
+Ciclo defensivo concluido: baseline controlado, revisao de seguranca, plano de patch, remediacao com Codex CLI, validacao local, revisao humana e commit final.
+
