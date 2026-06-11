@@ -45,8 +45,8 @@ Demonstrar um fluxo defensivo completo em ambiente autorizado e controlado:
 
 ## Resultado
 
-- Padrao inseguro identificado: renderizacao com innerHTML.
-- Patch aplicado: substituicao por 	extContent.
+- Padrao inseguro identificado: renderizacao com `innerHTML`.
+- Patch aplicado: substituicao por `textContent`.
 - Validacao local realizada.
 - Evidencia publica sanitizada criada.
 - Commit final revisado e aprovado por humano.
@@ -54,4 +54,5 @@ Demonstrar um fluxo defensivo completo em ambiente autorizado e controlado:
 ## Status
 
 Ciclo defensivo concluido: baseline controlado, revisao de seguranca, plano de patch, remediacao com Codex CLI, validacao local, revisao humana e commit final.
+
 
