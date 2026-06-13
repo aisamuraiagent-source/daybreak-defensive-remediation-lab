@@ -70,7 +70,6 @@ No affiliation with OpenAI is claimed. No acceptance, access, or authorization f
 
 ## Next Improvements
 
-- convert the PR from draft to ready for review
 - add CI validation
 - add reviewed deployment headers if publicly hosted
 - add signed release notes after merge
