@@ -40,7 +40,7 @@ This public sanitized lab is aligned with Daybreak concepts and defensive AI rem
 | --- | --- |
 | Finding and prioritizing realistic risks | `docs/evidence/02_security_triage.md` records rendering regression, evidence drift, validation, deployment hardening, public narrative, and secret hygiene risks. |
 | Generating safe remediation | `docs/remediation/remediation_plan.md` separates applied low-risk documentation corrections from deferred release-affecting actions. |
-| Validating fixes | `docs/validation/validation_report.md` records remote review findings and local validation commands to run before merge. |
+| Validating fixes | `docs/validation/validation_report.md` records remote review findings and local PowerShell validation results. |
 | Producing audit-ready evidence | `docs/evidence/01_repository_inventory.md`, `docs/threat-model/threat_model.md`, and this summary create a traceable evidence trail. |
 | Keeping humans in the review loop | `docs/remediation/human_approval_checklist.md` defines gates for scope, sanitization, code behavior, documentation, and merge preparation. |
 
@@ -57,7 +57,7 @@ No affiliation with OpenAI is claimed. No acceptance, access, or authorization f
 - `docs/evidence/02_security_triage.md`: prioritized risk table with impact, probability, severity, evidence, recommended remediation, and status.
 - `docs/remediation/remediation_plan.md`: safe remediation strategy, applied changes, deferred actions, and next remediation steps.
 - `docs/remediation/human_approval_checklist.md`: review gates for scope, sanitization, code behavior, documentation, and commits.
-- `docs/validation/validation_report.md`: remote review findings, recommended local commands, corrections made, and pending items.
+- `docs/validation/validation_report.md`: remote review findings, local validation results, corrections made, and pending items.
 
 ## Limitations
 
@@ -67,12 +67,10 @@ No affiliation with OpenAI is claimed. No acceptance, access, or authorization f
 - not a replacement for enterprise-grade security review
 - not evidence of OpenAI affiliation, access, or acceptance
 - not a guarantee of complete security coverage
-- local validation commands still need to be run before final merge
 
 ## Next Improvements
 
-- run and record local validation commands
-- convert the PR from draft to ready after validation
+- convert the PR from draft to ready for review
 - add CI validation
 - add reviewed deployment headers if publicly hosted
 - add signed release notes after merge
