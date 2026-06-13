@@ -10,7 +10,9 @@ This correction pass reviewed the remote repository contents through the GitHub 
 
 No external scanning was performed. No dependency installation was required. No offensive testing was performed.
 
-## Repository Files Confirmed During Remote Review
+This report separates the original recorded local validation run from later repository state that was added in follow-up commits.
+
+## Repository Files And Evidence State
 
 | Path | Status | Note |
 | --- | --- | --- |
@@ -20,6 +22,8 @@ No external scanning was performed. No dependency installation was required. No 
 | `index.html` | Present | Static UI. |
 | `app.js` | Present | Contains text-safe rendering control. |
 | `styles.css` | Present | Styling only. |
+| `.gitignore` | Present in recorded validation run | Blocks local state, archives, logs, and editor artifacts. |
+| `.github/workflows/static-validation.yml` | Present in current repository state | Static defensive validation workflow added after the original local validation run recorded below. |
 | `docs/evidence/01_repository_inventory.md` | Present | Corrected. |
 | `docs/evidence/02_security_triage.md` | Present | Corrected. |
 | `docs/remediation/remediation_plan.md` | Present | Corrected. |
@@ -27,6 +31,7 @@ No external scanning was performed. No dependency installation was required. No 
 | `docs/threat-model/threat_model.md` | Present | Corrected. |
 | `docs/validation/validation_report.md` | Present | This report. |
 | `docs/daybreak-application/daybreak_candidate_summary.md` | Present | Corrected. |
+| `docs/governance/main_branch_ruleset_evidence.md` | Present in current repository state | Governance evidence added after the original local validation run recorded below. |
 
 ## Runtime Rendering Control
 
@@ -41,8 +46,8 @@ This means user input is written as text, not interpreted as HTML.
 ## Local Validation Environment
 
 - Shell: Windows PowerShell
-- Repository path: `C:\Users\vtcom\CodexProjetos\daybreak-defensive-remediation-lab`
-- Branch: `codex/daybreak-remediation-evidence`
+- Repository path: local repository checkout path redacted
+- Recorded validation branch: `codex/daybreak-remediation-evidence`
 - Node.js: `v26.3.0`
 - Working tree: clean after validation
 - Dependency install: not required
@@ -64,6 +69,8 @@ Get-ChildItem -Recurse -File -Force |
 ```
 
 Result: repository file inventory was listed. Confirmed current scope includes `.gitignore`, `AGENTS.md`, `app.js`, `index.html`, `styles.css`, legacy remediation docs, `README.md`, `SECURITY.md`, and the new `docs/` evidence package.
+
+Follow-up repository state now also includes `.github/workflows/static-validation.yml` and `docs/governance/main_branch_ruleset_evidence.md`; those files were not part of the original local validation run captured by the commit log below.
 
 ```powershell
 node --check app.js
@@ -113,6 +120,7 @@ a84fcdc Correct threat model scope
 | JavaScript syntax | Pass | `node --check app.js` returned no error. |
 | Unsafe rendering pattern scan | Pass | No `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `eval(`, or `new Function` in `app.js`/`index.html`. |
 | Secret-pattern scan | Pass with documentation-only matches | Matches occurred in documentation/checklist/evidence text, not as concrete runtime secrets. |
+| Static CI workflow | Present in current repository state | `.github/workflows/static-validation.yml` records static defensive validation for pull requests, pushes to `main`, and manual workflow dispatch; this was added after the original local validation run recorded above. |
 | PR ready state | Pass | PR was converted from draft to ready for review after validation was recorded. |
 | External scanning | Not applicable | Explicitly out of scope and not executed. |
 
@@ -135,6 +143,6 @@ No concrete runtime secret was identified from the reported secret-pattern match
 
 ## Pending Items
 
-- add CI static validation in a later PR
+- keep static CI validation aligned with repository evidence
 - review CSP/security headers before any public deployment
 - add release notes after merge

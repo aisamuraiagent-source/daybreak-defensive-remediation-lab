@@ -7,7 +7,7 @@ Este laboratorio demonstra um ciclo defensivo minimo:
 1. Identificacao de padrao inseguro em codigo proprio.
 2. Documentacao do risco.
 3. Planejamento de patch.
-4. Verificacao esperada.
+4. Verificacao local registrada.
 5. Preparacao de evidencia publica sanitizada.
 
 ## Achado
@@ -28,6 +28,6 @@ Usar `textContent` para renderizar texto puro.
 
 ## Status
 
-Remediacao concluida.
+Remediacao concluida e validada no escopo local.
 
-O patch substituiu a renderizacao insegura por renderizacao de texto puro. A verificacao prevista confirma que marcacoes HTML digitadas pelo usuario devem aparecer como texto literal, sem interpretacao pelo navegador.
+O patch substituiu a renderizacao insegura por renderizacao de texto puro. A evidencia atual registra que a aplicacao usa `textContent`, mantendo marcacoes HTML digitadas pelo usuario como texto literal, sem interpretacao pelo navegador.

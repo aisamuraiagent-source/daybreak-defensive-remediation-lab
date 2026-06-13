@@ -16,13 +16,13 @@ A renderizacao foi alterada para `textContent`, mantendo o fluxo local da aplica
 - A aplicacao deve permanecer funcional.
 - O escopo deve permanecer local, proprio e defensivo.
 
-## Resultado esperado
+## Resultado da revisao estatica
 
-Apos o patch, a area de saida deve exibir exatamente o texto informado pelo usuario, sem criar elementos HTML a partir da entrada.
+A revisao estatica confirmou que o codigo usa `textContent` para renderizar texto puro, sem sink de criacao de elementos HTML a partir da entrada.
 
 ## Limites do teste
 
-Esta verificacao e textual e local. Nao houve varredura, acesso a rede, exploracao real, teste contra terceiros, coleta de credenciais ou uso de dados sensiveis.
+Esta verificacao e estatica, textual e local. Nao houve varredura, acesso a rede, exploracao real, teste contra terceiros, coleta de credenciais ou uso de dados sensiveis.
 
 ## Confirmacao de escopo
 

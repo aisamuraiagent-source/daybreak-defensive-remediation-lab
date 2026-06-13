@@ -48,13 +48,15 @@ Current controls observed:
 - user input rendered through `textContent` in `app.js`
 - defensive AI operating rules documented in `AGENTS.md`
 - repository security policy documented in `SECURITY.md`
+- static validation workflow documented in `.github/workflows/static-validation.yml`
+- repository hygiene guardrails documented in `.gitignore`
 
 Primary risks documented:
 
 - future changes could reintroduce `innerHTML` or unsafe dynamic rendering
 - public documentation could overclaim OpenAI affiliation, Daybreak access, or security coverage
 - deployment hardening would need review if the app is later hosted publicly
-- no automated CI validation exists yet
+- static CI validation exists and must stay synchronized with the evidence package
 - evidence must stay synchronized with the actual repository files
 
 ## Evidence Package
@@ -68,6 +70,12 @@ Evidence files are stored under `docs/`:
 - `docs/remediation/human_approval_checklist.md`
 - `docs/validation/validation_report.md`
 - `docs/daybreak-application/daybreak_candidate_summary.md`
+- `docs/governance/main_branch_ruleset_evidence.md`
+
+Repository guardrail files:
+
+- `.github/workflows/static-validation.yml`
+- `.gitignore`
 
 ## Local Validation
 
