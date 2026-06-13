@@ -1,12 +1,12 @@
 # Repository Inventory — Defensive Evidence
 
-Date: 2026-06-12  
-Scope: local repository only  
+Date: 2026-06-13  
+Scope: public repository files only  
 Mode: defensive, sanitized, no external scanning
 
 ## Summary
 
-This repository contains a static local-first content workflow app plus Markdown templates and documentation. The primary runtime surface is browser-executed HTML/CSS/JavaScript. There is no backend, no package manager manifest, no database, and no server-side authentication layer.
+This repository contains a minimal static web security lab plus defensive documentation. The runtime surface is a browser-executed HTML/CSS/JavaScript app. There is no backend, no package manager manifest, no database, no authentication layer, and no external service integration in the reviewed public scope.
 
 ## Summarized Tree
 
@@ -15,26 +15,22 @@ This repository contains a static local-first content workflow app plus Markdown
 ├── AGENTS.md
 ├── README.md
 ├── SECURITY.md
-├── abrir-stack-conteudo.cmd
+├── app.js
 ├── index.html
-├── netlify.toml
-├── Stack de Criacao de Conteudo.url
-├── docs/
-│   ├── STACK_CRIACAO_CONTEUDO.md
-│   ├── daybreak-application/
-│   ├── evidence/
-│   ├── remediation/
-│   ├── threat-model/
-│   └── validation/
-└── templates/
-    ├── copywriter.html
-    ├── PLANO_REPLICACAO_VIDEO.md
-    ├── PROMPTS_STACK_CONTEUDO.md
-    ├── Maquina-de-Fluxos-Semanticos-LIMPO.zip
-    └── Maquina de Fluxos Semanticos (LIMPO)/
-        ├── duplicated static source
-        ├── deploy archive
-        └── .netlify/state.json
+├── styles.css
+└── docs/
+    ├── daybreak-application/
+    │   └── daybreak_candidate_summary.md
+    ├── evidence/
+    │   ├── 01_repository_inventory.md
+    │   └── 02_security_triage.md
+    ├── remediation/
+    │   ├── human_approval_checklist.md
+    │   └── remediation_plan.md
+    ├── threat-model/
+    │   └── threat_model.md
+    └── validation/
+        └── validation_report.md
 ```
 
 `.git/` is intentionally excluded from this public inventory.
@@ -43,49 +39,24 @@ This repository contains a static local-first content workflow app plus Markdown
 
 | File | Purpose | Security relevance |
 | --- | --- | --- |
-| `index.html` | Main static app for generating a Gemini command from two inputs. | Browser-side input handling, `localStorage`, clipboard, export, dynamic rendering. |
-| `templates/copywriter.html` | Local copywriting workspace with saved projects. | Larger browser-side data surface, `localStorage`, export, dynamic rendering. |
-| `abrir-stack-conteudo.cmd` | Starts local Python HTTP server and opens the app. | Executable local launcher, binds to `127.0.0.1`. |
-| `netlify.toml` | Static hosting config. | Security headers and publish scope. |
-| `docs/STACK_CRIACAO_CONTEUDO.md` | Original workflow architecture. | Documents intended use and boundaries. |
-| `templates/*.md` | Reusable content workflow templates. | Prompt and process documentation. |
-| `templates/**/*.zip` | Archived bundles and deployment packages. | Drift and metadata risk if published without review. |
-| `templates/**/.netlify/state.json` | Local Netlify deployment state in nested package copy. | Contains a deployment identifier recorded as `[REDACTED]` in public evidence. |
+| `index.html` | Static browser UI for the lab. | Defines input, button, and output target. |
+| `app.js` | Remediated JavaScript behavior. | Renders user input with `textContent`, reducing script injection risk compared with raw HTML rendering. |
+| `styles.css` | Visual styling. | No runtime security logic. |
+| `AGENTS.md` | Defensive operating rules for AI-assisted work. | Defines allowed and prohibited actions. |
+| `SECURITY.md` | Security policy. | Defines scope, reporting, and public-lab limits. |
+| `docs/` | Evidence package. | Contains inventory, threat model, triage, remediation plan, checklist, validation report, and candidate summary. |
 
 ## Technologies Used
 
 - HTML5
 - CSS
 - Vanilla JavaScript
-- Browser APIs: `localStorage`, Clipboard API, Blob/Object URL download
 - Markdown
-- Windows CMD + PowerShell launcher
-- Python `http.server` through local launcher
-- Netlify static configuration
 
 ## Entry Points
 
 - `index.html`
-- `templates/copywriter.html`
-- `abrir-stack-conteudo.cmd`
-- `Stack de Criacao de Conteudo.url`
-- Static deployment root configured by `netlify.toml`
-
-## Configuration Files
-
-- `AGENTS.md`: project instructions and operating rules.
-- `README.md`: public positioning and usage.
-- `SECURITY.md`: defensive security policy.
-- `netlify.toml`: static deploy publish path and headers.
-- `templates/**/.netlify/state.json`: local deployment state found in nested packaged copy; value redacted.
-
-## Executable Scripts
-
-| Script | Behavior | Defensive note |
-| --- | --- | --- |
-| `abrir-stack-conteudo.cmd` | Uses PowerShell to check port `4173`, starts `python -m http.server 4173 --bind 127.0.0.1`, opens local URL. | Local-only bind reduces network exposure; reviewer should ensure only intended files are served. |
-| Inline script in `index.html` | Saves two inputs, generates command, copies/downloads text. | User input is escaped before display through `escapeHtml`. |
-| Inline script in `templates/copywriter.html` | Saves projects, renders copy blocks, exports Markdown. | Dynamic rows use DOM APIs and `textContent` for user-derived display. |
+- `app.js`
 
 ## Dependencies Identified
 
@@ -93,24 +64,22 @@ No package manager dependencies were identified:
 
 - no `package.json`
 - no lockfile
-- no imported frontend framework
+- no frontend framework import
 - no backend runtime dependency
 
 Runtime assumptions:
 
 - modern browser
-- optional Python available for local launcher
-- optional static host if deployed
+- optional local static server if the reviewer does not open `index.html` directly
 
 ## Defensive Risk Surface
 
-- browser-side persistence of user-entered client/content data in `localStorage`
-- static HTML dynamic rendering patterns that require continued escaping discipline
-- copied/exported generated text that may contain user-provided content
-- local launcher serving repository files from the current directory
-- nested deploy metadata and archive bundles that can leak stale or environment-specific state
-- static deploy headers that can be strengthened with a reviewed CSP
-- documentation claims that must avoid implying affiliation, external authorization, or production-grade vulnerability coverage
+- user-controlled text enters the browser UI through `noteInput`
+- rendered output depends on the safety of the `app.js` DOM write pattern
+- future edits could regress from `textContent` to unsafe HTML rendering
+- public documentation must avoid implying OpenAI affiliation, external authorization, or production-grade security coverage
+- if the app is later hosted publicly, static deployment headers and CSP should be reviewed
+- evidence files must remain synchronized with the actual repository contents
 
 ## Out of Scope
 
@@ -120,5 +89,4 @@ Runtime assumptions:
 - third-party platform assessment
 - production vulnerability certification
 - private candidate submission claims
-- deletion of existing files without explicit human approval
-
+- documentation about files that do not exist in this repository
