@@ -1,106 +1,97 @@
 # Threat Model — Defensive AI Remediation Lab
 
+Date: 2026-06-13  
+Scope: public repository files only  
+Mode: defensive, sanitized, no external scanning
+
 ## Objective Of The System
 
-The system is a static local-first workflow for content analysis, prompt generation, copywriting, and reusable content planning. It runs in the browser, stores data locally, and can be opened directly or through a local launcher.
+The system is a minimal static local-first web lab. A user enters a note in the browser, clicks a render button, and the note is displayed back into the page.
 
-The defensive objective is to keep the repository safe for public demonstration while preserving audit-ready evidence of how Codex-assisted review can inventory, triage, remediate, validate, and document risk without offensive activity.
+The defensive objective is to demonstrate a bounded remediation workflow: identify an unsafe rendering class, preserve a safer DOM write pattern, validate the repository locally, and publish evidence without offensive content or private data.
 
 ## Protected Assets
 
-- user-entered content references and client handles
-- generated prompts, copy drafts, and exported Markdown/text files
-- local browser storage used by `index.html` and `templates/copywriter.html`
-- public repository credibility and sanitized documentation
-- deployment metadata and local project identifiers
-- integrity of source files, templates, and evidence artifacts
+- user-entered note text during the browser session
+- integrity of `app.js` rendering behavior
+- public repository credibility
+- sanitized remediation evidence
+- boundaries around OpenAI/Daybreak-related public claims
 
 ## Trust Boundaries
 
 | Boundary | Controlled side | Less trusted side | Security concern |
 | --- | --- | --- | --- |
-| Browser UI inputs | App code | User-provided text, links, handles, briefing data | Stored or rendered data must not become script execution or private-data leakage. |
-| Browser storage | User browser profile | Anyone with access to same browser profile/device | Local drafts can persist beyond the session. |
-| Local launcher | Repository owner | Local machine environment and served files | Launcher should remain local-only and not expose a wider directory. |
-| Static deployment | Repository files | Public internet users if deployed | Public build must exclude local state and private identifiers. |
-| Documentation | Public lab evidence | Readers, reviewers, recruiters | Claims must be bounded and sanitized. |
-| AI tool usage | User-controlled prompt content | External AI platforms chosen by user | Confidential content should not be pasted into external tools without review. |
+| Browser UI input | App code | User-provided note text | User text must not become executable markup. |
+| DOM output | `app.js` rendering logic | Rendered browser document | Output should use text-safe DOM APIs. |
+| Repository documentation | Public evidence package | Readers, reviewers, recruiters | Claims must be accurate, bounded, and tied to real files. |
+| AI-assisted workflow | Human reviewer and repository owner | AI-generated suggestions | AI output must be reviewed before merge. |
+| Future deployment | Repository files | Public internet users if hosted later | Hosting headers and CSP should be reviewed before public deployment. |
 
 ## Inputs And Outputs
 
 Inputs:
 
-- video/post reference text or link
-- Instagram/client identifier
-- copywriting briefing fields
-- semantic method fields
-- prompt/template edits
-- local launcher execution
+- note text entered into `#noteInput`
+- click event on `#renderButton`
+- future documentation edits
+- future AI-assisted remediation suggestions
 
 Outputs:
 
-- generated Gemini command text
-- copied clipboard content
-- downloaded `.txt` command file
-- generated copy blocks
-- exported Markdown briefing
-- browser `localStorage` records
+- text rendered into `#output`
 - public Markdown evidence under `docs/`
+- Git commits and pull request review trail
 
 ## Plausible Risks
 
 | Risk | Severity | Defensive recommendation |
 | --- | --- | --- |
-| Deployment metadata committed from `.netlify/state.json` in nested packaged copy. | Medium | Redact in evidence, exclude from public commit, remove only after human approval. |
-| User-entered client/content data persists in `localStorage`. | Medium | Document privacy boundary, add clear-user workflow, avoid shared-browser use for sensitive data. |
-| ZIP bundles contain stale or private metadata. | Medium | Regenerate from clean source before release or exclude from public release. |
-| Future rendering changes use raw `innerHTML` with user input. | Medium | Preserve `escapeHtml` and `textContent` patterns; review dynamic HTML changes. |
-| Static deployment lacks Content Security Policy. | Low/Medium | Add CSP only after browser compatibility review. |
-| Local launcher serves unintended files from repository root. | Low | Keep bind to `127.0.0.1`, run only from trusted repo folder, document scope. |
-| Documentation overclaims security status or OpenAI relationship. | Medium | Use bounded wording: `public sanitized lab`, `aligned with Daybreak concepts`, `human-reviewed remediation`. |
+| Future code change replaces `textContent` with raw HTML rendering. | Medium | Preserve `textContent`; review all `innerHTML`, `outerHTML`, and `insertAdjacentHTML` usage. |
+| Public evidence describes files that are not present in the repository. | Medium | Keep inventory and validation tied to actual repository state. |
+| Documentation implies OpenAI affiliation, Daybreak acceptance, or production-grade security coverage. | Medium | Use bounded public wording and explicit limitations. |
+| No automated CI checks prevent rendering-pattern regression. | Low/Medium | Add lightweight CI in a later PR. |
+| Future public hosting lacks reviewed security headers or CSP. | Low/Medium | Add deployment config after hosting target is chosen. |
+| Secrets or local state are accidentally committed in future work. | Medium | Add `.gitignore` guardrails and run secret-pattern scans before merge. |
 
-## Realistic Defensive Attack Paths
+## Realistic Defensive Failure Paths
 
 These are described conceptually for defense only.
 
-1. A public release accidentally includes local deployment state from a nested package copy. A reviewer or external reader could correlate repository artifacts with a private static deployment identifier. Defensive response: redact, exclude, and require human release review.
+1. A future edit renders user input through raw HTML. Defensive response: reject the change unless it is proven safe, and preserve `textContent` for user-derived text.
 
-2. A user enters sensitive client content into the app on a shared browser profile. The data remains in browser storage and becomes visible to another local user. Defensive response: document local storage behavior and require manual clearing before sharing devices.
+2. Evidence files drift away from repository reality. Defensive response: validate file paths and remove documentation about unrelated projects.
 
-3. A future change renders user-controlled text through raw HTML instead of escaped text. Defensive response: preserve current escaping and `textContent` patterns, and add validation checks for dangerous rendering changes.
+3. Public language suggests access to or acceptance by OpenAI. Defensive response: state only that the lab is aligned with Daybreak concepts and does not claim affiliation.
 
-4. A ZIP archive is treated as clean evidence even though it contains stale files or local deployment metadata. Defensive response: validate archive contents or regenerate archives from reviewed source before publication.
+4. A future deployment uses default hosting behavior without reviewed headers. Defensive response: add CSP and static headers after testing compatibility.
 
-5. Public documentation suggests production-grade vulnerability coverage or OpenAI affiliation. Defensive response: maintain strict claim boundaries and describe this as a public sanitized lab.
+5. AI-generated remediation is merged without human review. Defensive response: enforce checklist-based review before merge.
 
 ## Existing Controls
 
-- no backend or server-side credential processing
+- no backend
+- no server-side credential processing
 - no package manager dependencies
-- no external scan or API call in app code
-- `index.html` escapes user-derived content through `escapeHtml`
-- `templates/copywriter.html` uses DOM creation and `textContent` for user-derived copy rows
-- local launcher binds to `127.0.0.1`
-- basic Netlify headers in `netlify.toml`
-- SECURITY policy added for defensive scope
-- remediation docs separate recommended destructive actions from applied low-risk changes
+- no external API calls in app code
+- user input rendered through `output.textContent = value;`
+- defensive operating rules in `AGENTS.md`
+- defensive-only security policy in `SECURITY.md`
+- human approval checklist in `docs/remediation/human_approval_checklist.md`
 
 ## Gaps
 
 - no automated CI validation
-- no committed `.gitignore` policy for local deploy state or ZIP bundles in the required commit scope
-- no CSP yet
-- no dependency review artifact because no package manifest exists
-- no formal release checklist existed before this remediation package
-- archive contents were not treated as source of truth
+- no deployment hardening config yet
+- no automated documentation path validation
+- no signed release notes
 
 ## Severity Calibration
 
 | Severity | Meaning in this repository | Example |
 | --- | --- | --- |
-| High | A change would expose secrets, execute untrusted script from user input, or publish private operational data at scale. | Raw user input rendered as executable HTML in a public deployment. |
-| Medium | A change could expose local identifiers, retain private user content, mislead reviewers, or publish stale artifacts. | `.netlify/state.json` or ZIP bundles committed without review. |
-| Low | A weakness reduces clarity, hardening, or repeatability but has limited impact in a static local-first app. | Missing CSP or missing CI on a dependency-free static app. |
+| High | A change would expose secrets, execute untrusted script from user input, or publish private operational data. | Raw user input rendered as executable HTML in a public deployment. |
+| Medium | A change could mislead reviewers, expose local state, or reintroduce unsafe rendering. | Evidence references unrelated files or `innerHTML` is reintroduced. |
+| Low | A weakness reduces repeatability or hardening but has limited impact in this static local-first lab. | Missing CI or missing deployment headers before a deployment exists. |
 
 No Critical risk is claimed from the current bounded review because there is no backend, no authentication boundary, no secrets intentionally used by the app, and no external system was tested.
-
