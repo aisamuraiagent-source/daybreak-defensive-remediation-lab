@@ -2,15 +2,14 @@
 
 ## Scope
 
-This repository is a public sanitized defensive AI remediation lab for a static local-first web workflow.
+This repository is a public sanitized defensive AI remediation lab for a small static local-first web app.
 
 Security review in this repository is limited to:
 
 - local source files
 - static HTML/CSS/JavaScript behavior
 - Markdown documentation
-- local launcher behavior
-- static deployment configuration
+- repository operating rules
 - evidence and remediation documentation
 
 The project does not authorize scanning, probing, exploitation, credential testing, or interaction with external systems.
@@ -19,7 +18,7 @@ The project does not authorize scanning, probing, exploitation, credential testi
 
 - Do not test third-party domains, IPs, services, accounts, or infrastructure.
 - Do not add exploit code, offensive payloads, persistence, evasion, credential collection, or bypass logic.
-- Do not publish secrets, tokens, API keys, private deployment identifiers, private paths, usernames, or environment-specific data.
+- Do not publish secrets, tokens, API keys, private keys, passwords, credentials, private paths, usernames, or environment-specific data.
 - If sensitive data is found, record only `[REDACTED]` in public evidence and rotate or remove it outside this repository workflow.
 - Keep remediation small, reviewable, and reversible.
 - Prefer documentation and validation changes unless a code change has explicit human approval.
@@ -46,4 +45,4 @@ Do not include exploit steps or offensive reproduction details.
 
 ## Human Approval
 
-Any change that deletes files, removes deployment state, changes app behavior, alters generated outputs, or modifies release artifacts requires explicit human approval before execution.
+Any change that deletes files, changes app behavior, alters generated outputs, modifies release artifacts, or changes public positioning requires explicit human review before merge.
