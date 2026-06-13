@@ -1,125 +1,105 @@
 # Validation Report — Defensive AI Remediation Lab
 
-Date: 2026-06-12  
-Scope: local repository only  
+Date: 2026-06-13  
+Scope: public repository files only  
 Mode: safe static validation, no external scanning, no dependency installation
 
-## Commands Analyzed
+## Validation Method
 
-| Command | Decision | Reason |
+This correction pass reviewed the remote repository contents through the GitHub connector and corrected evidence drift in the PR branch.
+
+No external scanning was performed. No dependency installation was required. No offensive testing was performed.
+
+## Repository Files Confirmed During Remote Review
+
+| Path | Status | Note |
 | --- | --- | --- |
-| `npm test` | Not executed | No `package.json` exists. |
-| `npm run build` | Not executed | No `package.json` exists. |
-| `npm run lint` | Not executed | No `package.json` exists. |
-| `.\abrir-stack-conteudo.cmd` | Inspected, not executed | It opens a browser window and starts a local server; source inspection was enough for this evidence pass. |
-| External scanners or network probes | Not executed | Explicitly out of scope. |
+| `README.md` | Present | Corrected to match actual lab scope. |
+| `SECURITY.md` | Present | Corrected to static lab scope. |
+| `AGENTS.md` | Present | Defines defensive agent rules. |
+| `index.html` | Present | Static UI. |
+| `app.js` | Present | Contains text-safe rendering control. |
+| `styles.css` | Present | Styling only. |
+| `docs/evidence/01_repository_inventory.md` | Present | Corrected. |
+| `docs/evidence/02_security_triage.md` | Present | Corrected. |
+| `docs/remediation/remediation_plan.md` | Present | Corrected. |
+| `docs/remediation/human_approval_checklist.md` | Present | Corrected. |
+| `docs/threat-model/threat_model.md` | Present | Corrected. |
+| `docs/validation/validation_report.md` | Present | This report. |
+| `docs/daybreak-application/daybreak_candidate_summary.md` | Present | Corrected. |
 
-## Commands Executed
+## Runtime Rendering Control
+
+The central runtime control in `app.js` is:
+
+```javascript
+output.textContent = value;
+```
+
+This means user input is written as text, not interpreted as HTML.
+
+## Recommended Local Commands
+
+Run these locally before converting the PR from draft to ready:
 
 ```powershell
 rg --files
 ```
 
-Purpose: inventory repository files.
-
-Result: repository file list was generated; `.git/` was excluded from public evidence.
+Purpose: confirm repository file inventory.
 
 ```powershell
-node -e "const fs=require('fs'); const files=['index.html','templates/copywriter.html']; for (const file of files) { const html=fs.readFileSync(file,'utf8'); const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]; for (const m of scripts) new Function(m[1]); console.log(file + ': inline script parse ok (' + scripts.length + ' script block)'); }"
+node --check app.js
 ```
 
-Result:
-
-```text
-index.html: inline script parse ok (1 script block)
-templates/copywriter.html: inline script parse ok (1 script block)
-```
+Purpose: confirm JavaScript syntax.
 
 ```powershell
-rg -n "SECRET|TOKEN|API[_-]?KEY|PASSWORD|PRIVATE KEY|BEGIN RSA|sk-[A-Za-z0-9]|ghp_|github_pat_|Bearer\s+[A-Za-z0-9._-]+|AKIA[0-9A-Z]{16}|OPENAI_API_KEY|client_secret|senha|password"
+rg -n "innerHTML|outerHTML|insertAdjacentHTML|eval\(|new Function" app.js index.html
 ```
 
-Result: broad scan matched only documentation/checklist text that names secret classes. No concrete secret value was identified by this pattern.
+Purpose: detect unsafe rendering or dynamic execution patterns.
+
+Expected result for the current app: no matches.
 
 ```powershell
-rg -n "SECRET|TOKEN|API[_-]?KEY|PASSWORD|PRIVATE KEY|BEGIN RSA|sk-[A-Za-z0-9]|ghp_|github_pat_|Bearer\s+[A-Za-z0-9._-]+|AKIA[0-9A-Z]{16}|OPENAI_API_KEY|client_secret|senha|password" AGENTS.md index.html netlify.toml abrir-stack-conteudo.cmd "Stack de Criacao de Conteudo.url" templates
+rg -n "SECRET|TOKEN|API[_-]?KEY|PASSWORD|PRIVATE KEY|OPENAI_API_KEY|client_secret|sk-[A-Za-z0-9]|ghp_|github_pat_" .
 ```
 
-Result: no matches in runtime/source/template files.
+Purpose: detect obvious secret patterns before merge.
 
-```powershell
-rg --hidden -n "siteId|\.netlify|deploy-" templates
-```
+Expected result: no concrete secret values. Documentation may mention secret classes as examples.
 
-Result: found nested Netlify local deployment state containing `siteId: [REDACTED]`. This was documented as a release metadata risk. The file was not deleted because destructive changes require explicit human approval.
-
-```powershell
-tar -tf "templates\Maquina-de-Fluxos-Semanticos-LIMPO.zip"
-tar -tf "templates\Maquina de Fluxos Semanticos (LIMPO)\deploy-1780965392480-ce7bdf60-dba0-411c-bdb5-5306ef25da41.zip"
-```
-
-Result: both ZIP files listed successfully. The outer ZIP includes `.netlify/state.json` and a nested deploy archive, so archives remain release-gated.
-
-```powershell
-$required = @(
-  'README.md',
-  'SECURITY.md',
-  'docs\evidence\01_repository_inventory.md',
-  'docs\threat-model\threat_model.md',
-  'docs\evidence\02_security_triage.md',
-  'docs\remediation\remediation_plan.md',
-  'docs\remediation\human_approval_checklist.md',
-  'docs\validation\validation_report.md',
-  'docs\daybreak-application\daybreak_candidate_summary.md',
-  'docs\STACK_CRIACAO_CONTEUDO.md',
-  'index.html',
-  'templates\copywriter.html',
-  'templates\PLANO_REPLICACAO_VIDEO.md',
-  'templates\PROMPTS_STACK_CONTEUDO.md',
-  'netlify.toml',
-  'abrir-stack-conteudo.cmd'
-)
-foreach ($p in $required) {
-  if (Test-Path -LiteralPath $p) { "OK $p" } else { "MISSING $p" }
-}
-```
-
-Final result: all required paths existed after this report and candidate summary were written.
-
-## Validation Results
+## Validation Results From This Correction Pass
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| File inventory | Pass | `rg --files` completed. |
-| Inline JavaScript syntax | Pass | Both HTML files parsed through `new Function`. |
-| Runtime/source secret scan | Pass | No matches in runtime/source/template files. |
-| Broad secret scan | Pass with false positives | Matches were documentation references to secret classes, not secret values. |
-| Hidden deployment metadata scan | Finding | Nested `siteId: [REDACTED]` exists in `.netlify/state.json`. |
-| ZIP integrity listing | Pass with release gate | Both archives listed; outer archive includes deploy state and must be reviewed before publication. |
-| Dependency install | Not applicable | No package manifest exists. |
-| External scanning | Not applicable | Out of scope and not executed. |
+| PR state reviewed | Finding | PR exists and is still draft. |
+| File inventory corrected | Pass | Evidence now describes the actual static lab files. |
+| Runtime rendering pattern reviewed | Pass | `app.js` uses `textContent`. |
+| Evidence drift removed | Pass | Unrelated content-stack documentation removed from this PR. |
+| Public narrative corrected | Pass | No OpenAI affiliation, access, authorization, or acceptance is claimed. |
+| Local command execution | Pending | Must be run by repository owner before final merge. |
 
 ## Corrections Made During Validation
 
-- README now documents defensive scope, local-first behavior, evidence index, and human review gate.
-- SECURITY policy now defines defensive-only rules and sensitive-data handling.
-- Threat model and triage now record deployment metadata, local storage, archive drift, rendering, launcher, header, validation, and narrative risks.
-- Remediation checklist now blocks staging nested `.netlify/` state and ZIP archives without review.
+- Removed references to unrelated `templates/`, ZIP archives, Netlify state, content automation stacks, and `localStorage` behavior.
+- Corrected README, inventory, triage, remediation plan, checklist, threat model, validation report, and Daybreak summary.
+- Added `.gitignore` guardrails for local state, generated archives, logs, and editor artifacts.
+- Removed unrelated content-stack documentation from the PR branch.
 
 ## Failures
 
-No syntax validation failure was observed.
+No runtime syntax failure was observed through source review.
 
-Known release blocker:
+Known merge blocker:
 
-- nested `.netlify/state.json` contains `siteId: [REDACTED]`
-
-This is documented but not removed in this pass.
+- Local validation commands still need to be run and recorded before the PR is treated as ready.
 
 ## Pending Items
 
-- add `.gitignore` for `.netlify/`, generated ZIPs, and local deploy state
-- remove nested `.netlify/state.json` after explicit human approval
-- regenerate or exclude ZIP archives before public release
-- add CI static validation
-- review CSP/Permissions-Policy before public deployment
+- run local validation commands
+- convert PR from draft to ready after validation
+- add CI static validation in a later PR
+- review CSP/security headers before any public deployment
+- add release notes after merge
