@@ -1,0 +1,134 @@
+name: Static Defensive Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-validation:
+    name: Static Defensive Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify required repository files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_files=(
+            "index.html"
+            "app.js"
+            "styles.css"
+            "AGENTS.md"
+            "README.md"
+            "SECURITY.md"
+            "docs/evidence/01_repository_inventory.md"
+            "docs/evidence/02_security_triage.md"
+            "docs/remediation/human_approval_checklist.md"
+            "docs/remediation/remediation_plan.md"
+            "docs/threat-model/threat_model.md"
+            "docs/validation/validation_report.md"
+            "docs/daybreak-application/daybreak_candidate_summary.md"
+          )
+
+          for file in "${required_files[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "::error::Required file missing: $file"
+              exit 1
+            fi
+          done
+
+          echo "Required file inventory passed."
+
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app.js
+          echo "JavaScript syntax check passed."
+
+      - name: Block unsafe rendering and dynamic execution patterns
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pattern='innerHTML|outerHTML|insertAdjacentHTML|eval\(|new Function'
+
+          if grep -RInE "$pattern" app.js index.html; then
+            echo "::error::Unsafe rendering or dynamic execution pattern found in runtime files."
+            exit 1
+          fi
+
+          echo "Runtime unsafe-pattern scan passed."
+
+      - name: Scan runtime files for obvious secret patterns
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pattern='SECRET|TOKEN|API[_-]?KEY|PASSWORD|PRIVATE KEY|OPENAI_API_KEY|client_secret|sk-[A-Za-z0-9]|ghp_|github_pat_'
+
+          if grep -RInE "$pattern" app.js index.html styles.css; then
+            echo "::error::Potential secret pattern found in runtime files."
+            exit 1
+          fi
+
+          echo "Runtime secret-pattern scan passed."
+
+      - name: Block local state and generated archive artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          forbidden_matches="$({
+            find . -path './.git' -prune -o -path '*/.netlify/*' -print
+            find . -path './.git' -prune -o -name '*.zip' -print
+            find . -path './.git' -prune -o -name '*.tar' -print
+            find . -path './.git' -prune -o -name '*.tar.gz' -print
+            find . -path './.git' -prune -o -name '*.7z' -print
+            find . -path './.git' -prune -o -name '*.log' -print
+          } | sort -u)"
+
+          if [[ -n "$forbidden_matches" ]]; then
+            echo "::error::Forbidden local state, generated archive, or log artifact found."
+            echo "$forbidden_matches"
+            exit 1
+          fi
+
+          echo "Repository hygiene scan passed."
+
+      - name: Confirm bounded public claims
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_claims=(
+            "public sanitized lab"
+            "No affiliation with OpenAI is claimed"
+            "not a production vulnerability scan"
+          )
+
+          for claim in "${required_claims[@]}"; do
+            if ! grep -RInF "$claim" README.md docs SECURITY.md >/dev/null; then
+              echo "::error::Required bounded-claim language missing: $claim"
+              exit 1
+            fi
+          done
+
+          echo "Bounded public-claims check passed."
