@@ -1,63 +1,61 @@
 # Remediation Plan — Defensive AI Remediation Lab
 
-Date: 2026-06-12  
+Date: 2026-06-13  
 Scope: safe, low-risk, repository-local remediation
 
 ## Remediation Strategy
 
-The repository does not need a framework, backend, database, or dependency install to become a credible public defensive lab. The safest remediation path is documentation, validation, and release gating first.
+The repository does not need a framework, backend, database, or dependency install to be a credible public defensive lab. The safest remediation path is accurate documentation, validation, and release gating first.
 
-Applied remediation is intentionally limited to small, reversible changes:
-
-- improve README positioning
-- add SECURITY policy
-- add repository inventory evidence
-- add sanitized threat model
-- add security triage table
-- add human approval checklist
-- add validation report
-- add Daybreak-aligned candidate summary
+This correction pass fixes evidence drift: the previous PR draft described unrelated content-workflow files that are not part of the current lab scope. The repository evidence now matches the actual static app.
 
 ## Applied Changes
 
 | Change | File | Risk reduced |
 | --- | --- | --- |
-| Reposition repository as public sanitized defensive lab. | `README.md` | Reduces overclaim and scope ambiguity. |
-| Add defensive-only security policy. | `SECURITY.md` | Clarifies authorized and prohibited security activity. |
-| Record repository inventory. | `docs/evidence/01_repository_inventory.md` | Creates audit-ready baseline. |
-| Record repository threat model. | `docs/threat-model/threat_model.md` | Establishes trust boundaries and realistic risk classes. |
-| Record triage table. | `docs/evidence/02_security_triage.md` | Prioritizes realistic risks and remediation status. |
-| Add human review checklist. | `docs/remediation/human_approval_checklist.md` | Keeps humans in release and destructive-change decisions. |
+| Reposition repository as a public sanitized defensive lab for the actual static app. | `README.md` | Reduces overclaim and scope ambiguity. |
+| Correct security policy scope. | `SECURITY.md` | Clarifies authorized and prohibited security activity. |
+| Correct repository inventory. | `docs/evidence/01_repository_inventory.md` | Aligns evidence with actual files. |
+| Correct security triage table. | `docs/evidence/02_security_triage.md` | Removes unrelated risks and keeps realistic risks. |
+| Correct threat model. | `docs/threat-model/threat_model.md` | Defines trust boundaries for the actual note-rendering app. |
+| Correct validation report. | `docs/validation/validation_report.md` | Separates verified remote review from recommended local checks. |
+| Correct human approval checklist. | `docs/remediation/human_approval_checklist.md` | Adds merge controls tied to this repository. |
+| Correct Daybreak candidate summary. | `docs/daybreak-application/daybreak_candidate_summary.md` | Keeps public narrative bounded and accurate. |
+| Remove unrelated content-stack documentation from this PR. | `docs/STACK_CRIACAO_CONTEUDO.md` | Eliminates portfolio noise and evidence drift. |
+| Add ignore guardrails for future local state and generated archives. | `.gitignore` | Reduces accidental publication risk. |
+
+## Existing Runtime Remediation
+
+The runtime security control already present in `app.js` is:
+
+```javascript
+output.textContent = value;
+```
+
+This is the central remediation evidence for the original unsafe rendering class. Future changes should preserve this pattern unless a safer DOM API pattern is explicitly reviewed.
 
 ## Deferred Or Approval-Gated Actions
 
-These actions were not executed because they are destructive, release-affecting, or require explicit human approval:
+These actions are deferred because they affect release behavior or require follow-up validation:
 
-- delete `templates/**/.netlify/state.json`
-- remove or regenerate ZIP archives
-- change JavaScript rendering behavior
-- change local storage behavior
-- change launcher behavior
-- add strict CSP headers without compatibility testing
-- push to remote repository
+- add GitHub Actions CI
+- add deployment config and security headers after a hosting target is chosen
+- add CSP after compatibility review
+- add automated documentation path validation
+- add signed release notes
 
 ## Recommended Next Remediation
 
-1. Add `.gitignore` entries for `.netlify/`, local deploy state, temporary exports, and generated ZIP bundles.
-2. After human approval, remove nested `.netlify/state.json` from release candidates.
-3. Regenerate ZIP archives from reviewed source or exclude them from public release.
-4. Add a static validation script that checks HTML script parsing, internal links, and obvious secret patterns.
-5. Add CI that runs the same static validation script.
-6. Review a Content Security Policy for static deployment compatibility.
-7. Add before/after remediation diff summary once the first commit exists.
+1. Run the local validation commands from `docs/validation/validation_report.md`.
+2. Confirm the PR diff contains only intended lab evidence and guardrail files.
+3. Convert the PR from draft to ready for review after validation is recorded.
+4. Merge through the protected branch flow, not by direct push to `main`.
 
 ## Safety Invariants
 
 - No external targets are scanned.
 - No exploit code is generated.
 - No secrets are printed.
-- Sensitive identifiers are represented as `[REDACTED]`.
-- Code changes require human approval.
-- Destructive changes are documented before execution.
+- Sensitive identifiers are represented as `[REDACTED]` if ever encountered.
 - Public claims remain bounded and non-affiliated.
-
+- Evidence must describe the actual repository, not a different local project.
