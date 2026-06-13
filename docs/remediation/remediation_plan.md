@@ -21,8 +21,9 @@ This correction pass fixes evidence drift: the previous PR draft described unrel
 | Correct validation report. | `docs/validation/validation_report.md` | Separates verified remote review from recommended local checks. |
 | Correct human approval checklist. | `docs/remediation/human_approval_checklist.md` | Adds merge controls tied to this repository. |
 | Correct Daybreak candidate summary. | `docs/daybreak-application/daybreak_candidate_summary.md` | Keeps public narrative bounded and accurate. |
-| Remove unrelated content-stack documentation from this PR. | `docs/STACK_CRIACAO_CONTEUDO.md` | Eliminates portfolio noise and evidence drift. |
+| Remove unrelated content-stack references from public evidence. | Repository evidence docs | Eliminates portfolio noise and evidence drift. |
 | Add ignore guardrails for future local state and generated archives. | `.gitignore` | Reduces accidental publication risk. |
+| Add static defensive validation workflow. | `.github/workflows/static-validation.yml` | Reduces regression risk for syntax, unsafe rendering, secret-pattern, hygiene, and bounded-claim checks. |
 
 ## Existing Runtime Remediation
 
@@ -38,17 +39,17 @@ This is the central remediation evidence for the original unsafe rendering class
 
 These actions are deferred because they affect release behavior or require follow-up validation:
 
-- add GitHub Actions CI
 - add deployment config and security headers after a hosting target is chosen
 - add CSP after compatibility review
 - add automated documentation path validation
 - add signed release notes
+- periodically verify GitHub ruleset enforcement against the tracked static validation workflow
 
 ## Recommended Next Remediation
 
 1. Run the local validation commands from `docs/validation/validation_report.md`.
-2. Confirm the PR diff contains only intended lab evidence and guardrail files.
-3. Convert the PR from draft to ready for review after validation is recorded.
+2. Confirm the static validation workflow passes on the pull request.
+3. Confirm the PR diff contains only intended lab evidence and guardrail files.
 4. Merge through the protected branch flow, not by direct push to `main`.
 
 ## Safety Invariants

@@ -20,6 +20,8 @@ No external scanning was performed. No dependency installation was required. No 
 | `index.html` | Present | Static UI. |
 | `app.js` | Present | Contains text-safe rendering control. |
 | `styles.css` | Present | Styling only. |
+| `.gitignore` | Present | Blocks local state, archives, logs, and editor artifacts. |
+| `.github/workflows/static-validation.yml` | Present | Static defensive validation workflow. |
 | `docs/evidence/01_repository_inventory.md` | Present | Corrected. |
 | `docs/evidence/02_security_triage.md` | Present | Corrected. |
 | `docs/remediation/remediation_plan.md` | Present | Corrected. |
@@ -27,6 +29,7 @@ No external scanning was performed. No dependency installation was required. No 
 | `docs/threat-model/threat_model.md` | Present | Corrected. |
 | `docs/validation/validation_report.md` | Present | This report. |
 | `docs/daybreak-application/daybreak_candidate_summary.md` | Present | Corrected. |
+| `docs/governance/main_branch_ruleset_evidence.md` | Present | Governance evidence for main branch protection and required workflow. |
 
 ## Runtime Rendering Control
 
@@ -41,7 +44,7 @@ This means user input is written as text, not interpreted as HTML.
 ## Local Validation Environment
 
 - Shell: Windows PowerShell
-- Repository path: `C:\Users\vtcom\CodexProjetos\daybreak-defensive-remediation-lab`
+- Repository path: local repository checkout path redacted
 - Branch: `codex/daybreak-remediation-evidence`
 - Node.js: `v26.3.0`
 - Working tree: clean after validation
@@ -64,6 +67,8 @@ Get-ChildItem -Recurse -File -Force |
 ```
 
 Result: repository file inventory was listed. Confirmed current scope includes `.gitignore`, `AGENTS.md`, `app.js`, `index.html`, `styles.css`, legacy remediation docs, `README.md`, `SECURITY.md`, and the new `docs/` evidence package.
+
+Current repository validation scope also includes `.github/workflows/static-validation.yml` and `docs/governance/main_branch_ruleset_evidence.md`.
 
 ```powershell
 node --check app.js
@@ -113,6 +118,7 @@ a84fcdc Correct threat model scope
 | JavaScript syntax | Pass | `node --check app.js` returned no error. |
 | Unsafe rendering pattern scan | Pass | No `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `eval(`, or `new Function` in `app.js`/`index.html`. |
 | Secret-pattern scan | Pass with documentation-only matches | Matches occurred in documentation/checklist/evidence text, not as concrete runtime secrets. |
+| Static CI workflow | Present | `.github/workflows/static-validation.yml` records static defensive validation for pull requests, pushes to `main`, and manual workflow dispatch. |
 | PR ready state | Pass | PR was converted from draft to ready for review after validation was recorded. |
 | External scanning | Not applicable | Explicitly out of scope and not executed. |
 
@@ -135,6 +141,6 @@ No concrete runtime secret was identified from the reported secret-pattern match
 
 ## Pending Items
 
-- add CI static validation in a later PR
+- keep static CI validation aligned with repository evidence
 - review CSP/security headers before any public deployment
 - add release notes after merge

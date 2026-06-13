@@ -38,6 +38,7 @@ jobs:
             "AGENTS.md"
             "README.md"
             "SECURITY.md"
+            ".gitignore"
             "docs/evidence/01_repository_inventory.md"
             "docs/evidence/02_security_triage.md"
             "docs/remediation/human_approval_checklist.md"
@@ -45,6 +46,7 @@ jobs:
             "docs/threat-model/threat_model.md"
             "docs/validation/validation_report.md"
             "docs/daybreak-application/daybreak_candidate_summary.md"
+            "docs/governance/main_branch_ruleset_evidence.md"
           )
 
           for file in "${required_files[@]}"; do

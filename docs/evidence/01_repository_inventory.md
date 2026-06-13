@@ -12,9 +12,19 @@ This repository contains a minimal static web security lab plus defensive docume
 
 ```text
 .
+├── .github/
+│   └── workflows/
+│       └── static-validation.yml
+├── .gitignore
 ├── AGENTS.md
+├── CASE_STUDY.md
+├── PATCH_PLAN.md
+├── PATCH_VERIFICATION_RESULT.md
+├── PUBLIC_REMEDIATION_SUMMARY.md
 ├── README.md
 ├── SECURITY.md
+├── SECURITY_REVIEW.md
+├── VERIFICATION_PLAN.md
 ├── app.js
 ├── index.html
 ├── styles.css
@@ -24,6 +34,8 @@ This repository contains a minimal static web security lab plus defensive docume
     ├── evidence/
     │   ├── 01_repository_inventory.md
     │   └── 02_security_triage.md
+    ├── governance/
+    │   └── main_branch_ruleset_evidence.md
     ├── remediation/
     │   ├── human_approval_checklist.md
     │   └── remediation_plan.md
@@ -44,7 +56,10 @@ This repository contains a minimal static web security lab plus defensive docume
 | `styles.css` | Visual styling. | No runtime security logic. |
 | `AGENTS.md` | Defensive operating rules for AI-assisted work. | Defines allowed and prohibited actions. |
 | `SECURITY.md` | Security policy. | Defines scope, reporting, and public-lab limits. |
-| `docs/` | Evidence package. | Contains inventory, threat model, triage, remediation plan, checklist, validation report, and candidate summary. |
+| `.github/workflows/static-validation.yml` | Static defensive validation workflow. | Runs file inventory, JavaScript syntax, unsafe rendering, secret-pattern, hygiene, and bounded-claim checks. |
+| `.gitignore` | Repository hygiene guardrails. | Blocks local deployment state, generated archives, logs, and editor artifacts. |
+| Root remediation docs | Historical remediation evidence. | Keep temporal wording clear so legacy findings are not confused with current runtime state. |
+| `docs/` | Evidence package. | Contains inventory, threat model, triage, remediation, validation, governance, and candidate evidence. |
 
 ## Technologies Used
 
@@ -57,6 +72,7 @@ This repository contains a minimal static web security lab plus defensive docume
 
 - `index.html`
 - `app.js`
+- `.github/workflows/static-validation.yml` for repository validation on pull requests, pushes to `main`, and manual workflow dispatch
 
 ## Dependencies Identified
 
