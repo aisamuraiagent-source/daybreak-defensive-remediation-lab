@@ -16,9 +16,9 @@ A renderizacao foi alterada para `textContent`, mantendo o fluxo local da aplica
 - A aplicacao deve permanecer funcional.
 - O escopo deve permanecer local, proprio e defensivo.
 
-## Resultado observado
+## Resultado da revisao estatica
 
-Apos o patch, a area de saida preserva renderizacao de texto puro por meio de `textContent`, sem criar elementos HTML a partir da entrada.
+A revisao estatica confirmou que o codigo usa `textContent` para renderizar texto puro, sem sink de criacao de elementos HTML a partir da entrada.
 
 ## Limites do teste
 

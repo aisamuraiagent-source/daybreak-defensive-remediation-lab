@@ -70,6 +70,6 @@ No affiliation with OpenAI is claimed. No acceptance, access, or authorization f
 
 ## Next Improvements
 
-- add CI validation
+- keep CI validation aligned with repository evidence and branch protection
 - add reviewed deployment headers if publicly hosted
 - add signed release notes after merge
