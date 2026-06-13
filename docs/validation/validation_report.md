@@ -113,6 +113,7 @@ a84fcdc Correct threat model scope
 | JavaScript syntax | Pass | `node --check app.js` returned no error. |
 | Unsafe rendering pattern scan | Pass | No `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `eval(`, or `new Function` in `app.js`/`index.html`. |
 | Secret-pattern scan | Pass with documentation-only matches | Matches occurred in documentation/checklist/evidence text, not as concrete runtime secrets. |
+| PR ready state | Pass | PR was converted from draft to ready for review after validation was recorded. |
 | External scanning | Not applicable | Explicitly out of scope and not executed. |
 
 ## Corrections Made During Validation
@@ -122,6 +123,7 @@ a84fcdc Correct threat model scope
 - Added `.gitignore` guardrails for local state, generated archives, logs, and editor artifacts.
 - Removed unrelated content-stack documentation from the PR branch.
 - Recorded local validation results after repository-owner execution.
+- Converted the PR from draft to ready for review after validation.
 
 ## Failures
 
@@ -133,7 +135,6 @@ No concrete runtime secret was identified from the reported secret-pattern match
 
 ## Pending Items
 
-- convert PR from draft to ready for review
 - add CI static validation in a later PR
 - review CSP/security headers before any public deployment
 - add release notes after merge
