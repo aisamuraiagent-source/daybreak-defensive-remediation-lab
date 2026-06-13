@@ -1,0 +1,21 @@
+# Local deployment state
+.netlify/
+**/.netlify/
+
+# Generated archives and release bundles
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Local exports, scratch files, and logs
+exports/
+tmp/
+*.log
+*.local.*
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
